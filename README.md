@@ -1,4 +1,4 @@
-# wscript - 极简 Windows 自动化执行器
+# miauto - 极简 Windows 自动化执行器
 
 抛弃复杂的脚本逻辑，只保留最纯粹直接的自动化实操功能。支持绝对坐标点击、固定区域 OCR 找字点击及常见键盘操作。
 
@@ -124,7 +124,7 @@ delete_board($my_name)
 
 ---
 
-## 3. 运行脚本 (`wscript.py`)
+## 3. 运行脚本 (`miauto.py`)
 
 配置好脚本后即可启动：
 
@@ -132,5 +132,5 @@ delete_board($my_name)
 # --delay 2 : 开启 2 秒倒计时，给你留时间切回游戏或 APP 界面
 # --sleep 0.3 : 每次点击/按键执行完后，默认硬等 0.3 秒，让界面刷新跟得上
 # --log w.log : 找不到的错可以直接写入日志记录
-python wscript.py --script your_script.txt --delay 2 --sleep 0.3 --log w.log
+python miauto.py --script your_script.txt --delay 2 --sleep 0.3 --log w.log
 ```

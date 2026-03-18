@@ -1,6 +1,6 @@
 """
-wscript.py - 自定义 Windows 自动化脚本解释器
-用法: python wscript.py --script your_script.txt
+miauto.py - 自定义 Windows 自动化脚本解释器
+用法: python miauto.py --script your_script.txt
 
 支持的指令:
   click  "文字", x:y [,radius]   - 在坐标 (x,y) ±radius(默认100) 范围内找文字并左键点击
@@ -46,9 +46,9 @@ def log_warn(msg: str):
         _log_file.flush()
 
 # ─── 全局 OCR 引擎 ────────────────────────────────────────────────────────────
-print("[wscript] 正在初始化 OCR 引擎...")
+print("[miauto] 正在初始化 OCR 引擎...")
 ocr_engine = RapidOCR()
-print("[wscript] OCR 引擎就绪。")
+print("[miauto] OCR 引擎就绪。")
 
 # ─── OCR 截屏并在区域内找文字，返回中心坐标 ──────────────────────────────────
 def _ocr_region(text: str, region: tuple, index: int = None, return_all: bool = False):
@@ -442,7 +442,7 @@ def preprocess(lines: list[str]) -> dict:
                 body.append(lines[i][4:] if lines[i].startswith("    ") else lines[i][1:])
                 i += 1
             functions[func_name] = {"params": params, "defaults": defaults, "body": body}
-            print(f"[wscript] 已加载函数: {func_name}({', '.join(params)})")
+            print(f"[miauto] 已加载函数: {func_name}({', '.join(params)})")
         else:
             i += 1
     return functions
@@ -452,7 +452,7 @@ def preprocess(lines: list[str]) -> dict:
 def main():
     global _log_file, _sleep_after
 
-    parser = argparse.ArgumentParser(description="wscript - 自定义 Windows 自动化脚本解释器")
+    parser = argparse.ArgumentParser(description="miauto - 自定义 Windows 自动化脚本解释器")
     parser.add_argument("--script", required=True, help="要执行的 .txt 脚本文件路径")
     parser.add_argument("--delay", type=int, default=5, help="开始执行前的倒计时秒数（默认 5）")
     parser.add_argument("--log", default=None, help="把首次找不到的警告写入指定日志文件（如 w.log）")
@@ -460,13 +460,13 @@ def main():
     args = parser.parse_args()
 
     _sleep_after = args.sleep
-    print(f"[wscript] 全局操作间隔: {_sleep_after}s")
+    print(f"[miauto] 全局操作间隔: {_sleep_after}s")
 
     # 打开日志文件
     if args.log:
         _log_file = open(args.log, "a", encoding="utf-8")
         _log_file.write(f"\n{'='*60}\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 脚本开始: {args.script}\n")
-        print(f"[wscript] 日志将写入: {args.log}")
+        print(f"[miauto] 日志将写入: {args.log}")
 
     # 读脚本
     try:
