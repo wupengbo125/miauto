@@ -1,0 +1,58 @@
+# sample.txt - 自动化导入配置样例
+# 这是一个虚构的自动化场景，展示了工具支持的所有核心语法
+# 目标：登录系统 -> 删除遗留的临时配置 -> 批量遍历本地文件夹并导入新配置
+
+# 1. 启动与登录 (演示绝对坐标点击、环境变量键盘读写)
+click "打开应用", 985:1359
+sleep 3
+click "账号输入框", 952:715
+paste "admin@example.com"
+click "密码输入框", 937:782
+# 安全读取系统环境变量中的密码 (需设置环境变量 MY_APP_PWD)
+paste env.MY_APP_PWD
+click "登录按钮", 949:879
+sleep 5
+
+
+# 2. 批量多选旧配置 (演示区域内全量匹配 clickall，以及按键常按组合)
+click "配置列表", 300:200
+keydown ctrl
+# 把右侧内容区所有的 "Backup" 文件一次性全部选中
+?clickall "Backup", 800:100, 1900:1000
+keyup ctrl
+click "删除选中项", 1518:448
+press enter
+
+
+# 3. 读取本地文件夹并执行批量导入 (演示内部函数 get_files 和 foreach 遍历)
+# 假设当前目录下有个 config_files 文件夹，里面全是 txt 配置
+files = get_files("./config_files", "txt")
+
+# 必须通过带 $ 的变量调用遍历对象，严谨明确
+for file in $files:
+    # 用解析出的 $file 变量作为参数，调用自定义函数
+    import_config($file)
+
+# 导入完毕，关闭软件
+click "关闭窗口", 1900:20
+click "确认保存", 1386:986
+
+
+# ─── 定义自定义函数 ──────────────────────────────────────────
+function import_config(name):
+    click "新建配置", 1499:414
+    press delete
+    paste $name
+    press enter
+    
+    # 继续点开导入目录并开始上传
+    click "从文件导入", 1550:623
+    click "浏览文件", 1465:873
+    
+    # 在弹出的框中寻找刚才赋予的文件名并点击
+    click $name:1, 263:216, 618:1148
+    click "打开确认", 1986:1269
+    
+    sleep 1
+    press enter
+    sleep 0.5
